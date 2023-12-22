@@ -1,11 +1,11 @@
+import Dashboard from "../components/Dashboard";
 import Navbar from "../components/Navbar"
-import UserProfile from "./Profile"
 
 const Home = () => {
     return (
         <div>
             <Navbar />
-            <UserProfile />
+            <Dashboard />
             </div>
     )
 }
