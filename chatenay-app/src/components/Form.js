@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import DragAndDrop from "./form/DragAndDrop";
 
 const Form = () => {
   const [formData, setFormData] = useState({
@@ -7,6 +8,7 @@ const Form = () => {
     prenom: "",
     email: "",
     age: "",
+    metier: "",
     aPropos: "",
     adresse: "",
     ville: "",
@@ -86,7 +88,7 @@ const Form = () => {
           htmlFor="photo"
           className="block text-sm font-semibold text-gray-600"
         >
-          Photo:
+          Photo
         </label>
         <input
           type="file"
@@ -101,7 +103,7 @@ const Form = () => {
           htmlFor="nom"
           className="block text-sm font-semibold text-gray-600"
         >
-          Nom:
+          Nom *
         </label>
         <input
           type="text"
@@ -118,7 +120,7 @@ const Form = () => {
           htmlFor="prenom"
           className="block text-sm font-semibold text-gray-600"
         >
-          Prénom:
+          Prénom *
         </label>
         <input
           type="text"
@@ -135,7 +137,7 @@ const Form = () => {
           htmlFor="email"
           className="block text-sm font-semibold text-gray-600"
         >
-          Adresse mail:
+          Adresse mail *
         </label>
         <input
           type="email"
@@ -149,10 +151,27 @@ const Form = () => {
       </div>
       <div className="mb-4">
         <label
+          htmlFor="metier"
+          className="block text-sm font-semibold text-gray-600"
+        >
+          Métier *
+        </label>
+        <input
+          type="text"
+          name="metier"
+          id="metier"
+          value={formData.metier}
+          onChange={handleInputChange}
+          className="mt-2 border p-2 w-full"
+          required
+        />
+      </div>
+      <div className="mb-4">
+        <label
           htmlFor="age"
           className="block text-sm font-semibold text-gray-600"
         >
-          Age:
+          Age *
         </label>
         <input
           type="number"
@@ -169,7 +188,7 @@ const Form = () => {
           htmlFor="aPropos"
           className="block text-sm font-semibold text-gray-600"
         >
-          A propos:
+          À propos
         </label>
         <textarea
           name="aPropos"
@@ -184,7 +203,7 @@ const Form = () => {
           htmlFor="adresse"
           className="block text-sm font-semibold text-gray-600"
         >
-          Adresse:
+          Adresse
         </label>
         <input
           type="text"
@@ -200,87 +219,91 @@ const Form = () => {
           htmlFor="ville"
           className="block text-sm font-semibold text-gray-600"
         >
-          Ville:
+          Ville *
         </label>
         <input
           type="text"
-              name="ville"
-              id="ville"
-              value={formData.ville}
-              onChange={handleInputChange}
-              className="mt-2 border p-2 w-full"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="region"
-              className="block text-sm font-semibold text-gray-600"
-            >
-              Région:
-            </label>
-            <select
-              name="region"
-              id="region"
-              value={formData.region}
-              onChange={handleInputChange}
-              className="mt-2 border p-2 w-full"
-              required
-            >
-              <option value="">Select a region</option> // Add default option
-              <option value="idf">Île-de-France</option>
-            </select>
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="codePostal"
-              className="block text-sm font-semibold text-gray-600"
-            >
-              Code postal:
-            </label>
-            <input
-              type="number"
-              name="codePostal"
-              id="codePostal"
-              value={formData.codePostal}
-              onChange={handleInputChange}
-              className="mt-2 border p-2 w-full"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="dureeArretTravail"
-              className="block text-sm font-semibold text-gray-600"
-            >
-              Durée d’arrêt de travail cette année (en jours):
-            </label>
-            <input
-              type="number"
-              name="dureeArretTravail"
-              id="dureeArretTravail"
-              value={formData.dureeArretTravail}
-              onChange={handleInputChange}
-              className="mt-2 border p-2 w-full"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="statut"
-              className="block text-sm font-semibold text-gray-600"
-            >
-              Statut:
-            </label>
-            <select
-              name="statut"
-              id="statut"
-              value={formData.statut}
-              onChange={handleInputChange}
-              className="mt-2 border p-2 w-full"
-              required
-            >
-          
+          name="ville"
+          id="ville"
+          value={formData.ville}
+          onChange={handleInputChange}
+          className="mt-2 border p-2 w-full"
+          required
+        />
+      </div>
+      <div className="mb-4">
+        <label
+          htmlFor="region"
+          className="block text-sm font-semibold text-gray-600"
+        >
+          Région *
+        </label>
+        <select
+          name="region"
+          id="region"
+          value={formData.region}
+          onChange={handleInputChange}
+          className="mt-2 border p-2 w-full"
+          required
+        >
+          <option value="" defaultValue={true} disabled hidden>
+            Choose here
+          </option>
+          <option value="idf">Île-de-France</option>
+        </select>
+      </div>
+      <div className="mb-4">
+        <label
+          htmlFor="codePostal"
+          className="block text-sm font-semibold text-gray-600"
+        >
+          Code postal *
+        </label>
+        <input
+          type="number"
+          name="codePostal"
+          id="codePostal"
+          value={formData.codePostal}
+          onChange={handleInputChange}
+          className="mt-2 border p-2 w-full"
+          required
+        />
+      </div>
+      <div className="mb-4">
+        <label
+          htmlFor="dureeArretTravail"
+          className="block text-sm font-semibold text-gray-600"
+        >
+          Durée d’arrêt de travail cette année (en jours) *
+        </label>
+        <input
+          type="number"
+          name="dureeArretTravail"
+          id="dureeArretTravail"
+          value={formData.dureeArretTravail}
+          onChange={handleInputChange}
+          className="mt-2 border p-2 w-full"
+          required
+        />
+      </div>
+      <div className="mb-4">
+        <label
+          htmlFor="statut"
+          className="block text-sm font-semibold text-gray-600"
+        >
+          Statut *
+        </label>
+        <select
+          name="statut"
+          id="statut"
+          value={formData.statut}
+          onChange={handleInputChange}
+          className="mt-2 border p-2 w-full"
+          required
+        >
+          <option value="" defaultValue={true} disabled hidden>
+            Choose here
+          </option>
           <option value="reconversion">Reconversion</option>
         </select>
       </div>
@@ -289,48 +312,16 @@ const Form = () => {
           htmlFor="zoneDeDepot"
           className="block text-sm font-semibold text-gray-600"
         >
-          Zone drag & drop pour déposer des fichiers:
+          Fichiers complémentaires
         </label>
-        <div
-          className="drop-zone border-dashed border-2 border-gray-300 p-4 mt-2"
-          onDrop={handleDrop}
-          onDragOver={handleDragOver}
-        >
-          {formData.zoneDeDepot.length > 0 ? (
-            <ul>
-              {formData.zoneDeDepot.map((file, index) => (
-                <li key={index} className="text-gray-700">
-                  {file.name}{" "}
-                  <button
-                    className="text-red-500 underline"
-                    type="button"
-                    onClick={() => handleRemoveFile(index)}
-                  >
-                    Supprimer
-                  </button>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="text-gray-500">
-              Glissez et déposez des fichiers ici ou{" "}
-              <span
-                className="file-select-text text-blue-500 cursor-pointer"
-                onClick={handleClickFiles}
-              >
-                cliquez
-              </span>{" "}
-              pour sélectionner des fichiers .
-            </p>
-          )}
-        </div>
-        <input
-          type="file"
-          name="zoneDeDepot"
-          onChange={handleSelectFiles}
-          multiple
-          className="hidden"
-          ref={fileInputRef}
+        <DragAndDrop
+          handleDrop={handleDrop}
+          formData={formData}
+          handleDragOver={handleDragOver}
+          handleRemoveFile={handleRemoveFile}
+          handleClickFiles={handleClickFiles}
+          fileInputRef={fileInputRef}
+          handleSelectFiles={handleSelectFiles}
         />
       </div>
       <button
