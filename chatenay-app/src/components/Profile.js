@@ -1,16 +1,18 @@
-import React, { useState, useEffect,} from "react"
+import React, { useState, useEffect, } from "react"
 import {
   PencilIcon,
   ArrowLeftIcon,
   PaperClipIcon,
 } from "@heroicons/react/outline"
-
 import Avatar from "../assets/avatar.jpg"
 import { Link } from "react-router-dom"
+import supabase from "../server/supabase"
+
 
 const UserProfile = () => {
 
   const [isEditMode, setIsEditMode] = useState(false);
+  const [profil, setProfil] = useState(null);
   const [userData, setUserData] = useState([
     { label: "Taux d'usure", value: "80%", field: "wearRate", isProgressBar: true },
     { label: "Mail", value: "jane.cooper@example.com", field: "email" },
@@ -28,6 +30,23 @@ const UserProfile = () => {
   ]);
 
   useEffect(() => {
+    async function getProfil() {
+          const { data, error } = await supabase
+              .from('users')
+              .select(`id, firstname, lastname, email, job, status, missing, created_at`)
+              .eq('id', 1)
+              .single();
+          if (error) {
+              console.log('error', error);
+          } else {
+              setProfil(data);
+          }
+  }
+  getProfil();
+  console.log('profil', profil);
+  },[])
+
+  useEffect(() => {
     const savedUserData = localStorage.getItem('userData')
     if (savedUserData) {
       setUserData(JSON.parse(savedUserData))
@@ -40,14 +59,7 @@ const UserProfile = () => {
 
   const handleInputChange = (index, newValue) => {
     const newData = [...userData]
-    if (userData[index].field === 'wearRate') {
-      const wearRate = Math.min(Math.max(newValue, 0), 100)
-      newData[index].value = `${wearRate}%`
-    } else if (index === 7) {
-      newData[index].value = newValue.split("\n")
-    } else {
-      newData[index].value = newValue
-    }
+    newData[index].value = newValue
     setUserData(newData)
   };
 
@@ -55,6 +67,10 @@ const UserProfile = () => {
     localStorage.setItem('userData', JSON.stringify(userData))
     setIsEditMode(false)
   }
+
+  const inputStyle = "form-input w-full h-full p-2 border-gray-300 rounded-md bg-transparent";
+  const textareaStyle = "form-textarea w-full h-full p-2 border-gray-300 rounded-md bg-transparent";
+
 
   return (
     <div className="min-h-screen">
@@ -95,33 +111,19 @@ const UserProfile = () => {
               {userData.map((data, index) => (
                 <tr key={index}>
                   <th
-                    scope="row"
-                    className={`py-4 px-6 font-medium text-gray-900 ${
-                      index % 2 === 0 ? "bg-gray-50" : "bg-white"
-                    }`}
+                    scope="row" 
+                    className={`py-4 px-6 font-medium text-gray-900 ${index % 2 === 0 ? "bg-gray-50" : "bg-white"}`}
                     style={{ width: "30%" }}
                   >
                     {data.label}
                   </th>
-                  
                   <td
-                    className={`py-4 px-6 ${
-                      index % 2 === 0 ? "bg-gray-50" : "bg-white"
-                    } ${data.isMultiLine ? "whitespace-normal break-words" : "whitespace-nowrap"}`}
+                    className={`py-4 px-6 ${index % 2 === 0 ? "bg-gray-50" : "bg-white"} ${data.isMultiLine ? "whitespace-normal break-words" : "whitespace-nowrap"}`}
                   >
-                    {isEditMode ? (
-                      data.isProgressBar ? (
-                        <input
-                          type="range"
-                          min="0"
-                          max="100"
-                          value={parseInt(data.value)}
-                          onChange={(e) => handleInputChange(index, e.target.value)}
-                          className="form-range w-full h-2.5 bg-gray-200 rounded-lg cursor-pointer"
-                        />
-                      ) : data.field === "files" ? (
+                    {isEditMode && data.field !== "wearRate" ? (
+                      data.field === "files" ? (
                         <textarea
-                          className="form-input w-full h-full p-2 border-gray-300 rounded-md"
+                          className={textareaStyle}
                           value={data.value.join("\n")}
                           onChange={(e) => handleInputChange(index, e.target.value)}
                         />
@@ -130,7 +132,7 @@ const UserProfile = () => {
                           type="text"
                           value={data.value}
                           onChange={(e) => handleInputChange(index, e.target.value)}
-                          className="form-input w-full h-full p-2 border-gray-300 rounded-md"
+                          className={inputStyle}
                         />
                       )
                     ) : data.isProgressBar ? (
@@ -146,6 +148,7 @@ const UserProfile = () => {
                         </div>
                       </div>
                     ) : data.field === "files" ? (
+                      // File display logic
                       <div className="border-2 rounded-md border-gray-100 flex flex-col w-1/2 divide-y divide-gray-100">
                         {data.value.map((file, fileIndex) => (
                           <div className="flex justify-between px-3 py-2" key={fileIndex}>
