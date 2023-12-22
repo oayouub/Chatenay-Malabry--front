@@ -10,14 +10,15 @@ const Form = ({ id }) => {
     nom: "",
     prenom: "",
     email: "",
-    age: "",
+    age: null,
     metier: "",
+    anciennete: null,
     aPropos: "",
     adresse: "",
     ville: "",
     region: "",
-    codePostal: "",
-    dureeArretTravail: "",
+    codePostal: null,
+    dureeArretTravail: null,
     statut: "",
     zoneDeDepot: [],
   });
@@ -172,22 +173,41 @@ const Form = ({ id }) => {
           </div>
         </div>
 
-        <div className="mb-4 w-full">
-          <label
-            htmlFor="metier"
-            className="block text-sm font-semibold text-gray-600"
-          >
-            Métier *
-          </label>
-          <input
-            type="text"
-            name="metier"
-            id="metier"
-            value={formData.metier}
-            onChange={handleInputChange}
-            className="mt-2 border p-2 w-full rounded-md"
-            required
-          />
+        <div className="flex gap-4">
+          <div className="mb-4 w-4/5">
+            <label
+              htmlFor="metier"
+              className="block text-sm font-semibold text-gray-600"
+            >
+              Métier *
+            </label>
+            <input
+              type="text"
+              name="metier"
+              id="metier"
+              value={formData.metier}
+              onChange={handleInputChange}
+              className="mt-2 border p-2 w-full rounded-md"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="age"
+              className="block text-sm font-semibold text-gray-600"
+            >
+              Ancienneté *
+            </label>
+            <input
+              type="number"
+              name="anciennete"
+              id="anciennete"
+              value={formData.anciennete}
+              onChange={handleInputChange}
+              className="mt-2 border p-2 w-full rounded-md"
+              required
+            />
+          </div>
         </div>
 
         <div className="mb-4 w-full">
@@ -244,12 +264,16 @@ const Form = ({ id }) => {
               </option>
               <option value="Île-de-France">Île-de-France</option>
               <option value="Hauts-de-France">Hauts-de-France</option>
-              <option value="Bourgogne-Franche-Comté">Bourgogne-Franche-Comté</option>
+              <option value="Bourgogne-Franche-Comté">
+                Bourgogne-Franche-Comté
+              </option>
               <option value="Nouvelle-Aquitaine">Nouvelle-Aquitaine</option>
               <option value="Pays de la Loiredl">Pays de la Loire</option>
               <option value="Occitanie">Occitanie</option>
               <option value="Auvergne-Rhône-Alpes">Auvergne-Rhône-Alpes</option>
-              <option value="Provence-Alpes-Côte d'Azur">Provence-Alpes-Côte d'Azur</option>
+              <option value="Provence-Alpes-Côte d'Azur">
+                Provence-Alpes-Côte d'Azur
+              </option>
               <option value="Corse">Corse</option>
               <option value="Bretagne">Bretagne</option>
               <option value="Centre-Val de Loire">Centre-Val de Loire</option>
