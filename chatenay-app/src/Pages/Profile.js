@@ -95,7 +95,7 @@ const createRow = (
             ></div>
           </div>
         </div>
-      ) : files.length > 1 ? (
+      ) : files.length >= 1 ? (
         <div className="border-2 rounded-md border-gray-100 flex flex-col w-1/2 divide-y > * + * divide-gray-100 > * + *">
           {files.map((file, index) => (
             <div className="flex justify-between px-3 py-2" key={index}>
