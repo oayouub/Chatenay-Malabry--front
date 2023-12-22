@@ -1,28 +1,40 @@
 import React, { useState, useRef } from "react";
 import DragAndDrop from "./form/DragAndDrop";
 import AvatarInput from "./form/AvatarInput";
+import supabase from "../server/supabase";
 
 import BaseAvatar from "../assets/baseAvatar.png";
+import { useNavigate } from "react-router-dom";
+
+const jobs = {
+  "Agent administratif municipal": 2,
+  "Auxiliaire de vie en crèche": 3,
+  "Agent de police municipale": 4,
+  Pompier: 1,
+};
 
 const Form = ({ id }) => {
   const [formData, setFormData] = useState({
-    photo: "",
-    nom: "",
-    prenom: "",
+    // photo: "",
+    lastname: "",
+    firstname: "",
     email: "",
     age: "",
-    metier: "",
-    anciennete: "",
-    aPropos: "",
-    adresse: "",
-    ville: "",
+    job: "",
+    seniority: "",
+    about: "",
+    address: "",
+    city: "",
     region: "",
-    codePostal: "",
-    dureeArretTravail: "",
-    statut: "",
-    zoneDeDepot: [],
+    zip_code: "",
+    missing: "",
+    status: "",
+    difficult: "",
+    usure: "",
+    // zoneDeDepot: [],
   });
 
+  const navigate = useNavigate();
   const [selectedFile, setSelectedFile] = useState(null);
 
   const fileInputRef = useRef(null);
@@ -32,6 +44,14 @@ const Form = ({ id }) => {
     setFormData({
       ...formData,
       [name]: value,
+      difficult: jobs[formData.job],
+      usure:
+        ((formData.age * 2 +
+          (jobs[formData.job] * 100 * 3 +
+            formData.missing * 4 +
+            formData.seniority * 1)) /
+          100) *
+        5,
     });
   };
 
@@ -80,10 +100,21 @@ const Form = ({ id }) => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Vous pouvez traiter les données ici
     console.log(formData);
+
+    try {
+      const { data, error } = await supabase.from("users").insert([formData]);
+      if (error) {
+        console.error(error);
+      } else {
+        console.log("Data inserted successfully:", data);
+        navigate("/");
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -92,25 +123,25 @@ const Form = ({ id }) => {
       className="mx-auto bg-white rounded-md shadow-md w-11/12 md:w-3/4 lg:w-2/3 transition-all mb-8"
     >
       <div className="p-6">
-        <AvatarInput
+        {/* <AvatarInput
           avatar={formData.photo && id ? formData.photo : BaseAvatar}
           handleFileChange={handleFileChange}
           selectedFile={selectedFile}
-        />
+        /> */}
 
         <div className="flex gap-4">
           <div className="mb-4 w-1/2">
             <label
-              htmlFor="nom"
+              htmlFor="lastname"
               className="block text-sm font-semibold text-gray-600"
             >
               Nom *
             </label>
             <input
               type="text"
-              name="nom"
-              id="nom"
-              value={formData.nom}
+              name="lastname"
+              id="lastname"
+              value={formData.lastname}
               onChange={handleInputChange}
               className="mt-2 border p-2 w-full rounded-md"
               required
@@ -118,16 +149,16 @@ const Form = ({ id }) => {
           </div>
           <div className="mb-4 w-1/2">
             <label
-              htmlFor="prenom"
+              htmlFor="firstname"
               className="block text-sm font-semibold text-gray-600"
             >
               Prénom *
             </label>
             <input
               type="text"
-              name="prenom"
-              id="prenom"
-              value={formData.prenom}
+              name="firstname"
+              id="firstname"
+              value={formData.firstname}
               onChange={handleInputChange}
               className="mt-2 border p-2 w-full rounded-md"
               required
@@ -176,33 +207,46 @@ const Form = ({ id }) => {
         <div className="flex gap-4">
           <div className="mb-4 w-4/5">
             <label
-              htmlFor="metier"
+              htmlFor="job"
               className="block text-sm font-semibold text-gray-600"
             >
               Métier *
             </label>
-            <input
-              type="text"
-              name="metier"
-              id="metier"
-              value={formData.metier}
+            <select
+              name="job"
+              id="job"
+              value={formData.job}
               onChange={handleInputChange}
               className="mt-2 border p-2 w-full rounded-md"
               required
-            />
+            >
+              <option value="" defaultValue={true} disabled hidden>
+                Sélectionner un métier
+              </option>
+              <option value="Agent administratif municipal">
+                Agent administratif municipal
+              </option>
+              <option value="Auxiliaire de vie en crèche">
+                Auxiliaire de vie en crèche
+              </option>
+              <option value="Agent de police municipale">
+                Agent de police municipale
+              </option>
+              <option value="Pompier">Pompier</option>
+            </select>
           </div>
           <div className="mb-4">
             <label
-              htmlFor="age"
+              htmlFor="seniority"
               className="block text-sm font-semibold text-gray-600"
             >
               Ancienneté (en année) *
             </label>
             <input
               type="number"
-              name="anciennete"
-              id="anciennete"
-              value={formData.anciennete}
+              name="seniority"
+              id="seniority"
+              value={formData.seniority}
               onChange={handleInputChange}
               className="mt-2 border p-2 w-full rounded-md"
               required
@@ -212,15 +256,15 @@ const Form = ({ id }) => {
 
         <div className="mb-4 w-full">
           <label
-            htmlFor="aPropos"
+            htmlFor="about"
             className="block text-sm font-semibold text-gray-600"
           >
             À propos
           </label>
           <textarea
-            name="aPropos"
-            id="aPropos"
-            value={formData.aPropos}
+            name="about"
+            id="about"
+            value={formData.about}
             onChange={handleInputChange}
             className="mt-2 border p-2 w-full rounded-md"
           />
@@ -228,16 +272,16 @@ const Form = ({ id }) => {
 
         <div className="mb-4 w-full">
           <label
-            htmlFor="adresse"
+            htmlFor="address"
             className="block text-sm font-semibold text-gray-600"
           >
             Adresse
           </label>
           <input
             type="text"
-            name="adresse"
-            id="adresse"
-            value={formData.adresse}
+            name="address"
+            id="address"
+            value={formData.address}
             onChange={handleInputChange}
             className="mt-2 border p-2 w-full rounded-md"
           />
@@ -283,16 +327,16 @@ const Form = ({ id }) => {
           </div>
           <div className="mb-4 w-full md:w-1/5">
             <label
-              htmlFor="codePostal"
+              htmlFor="zip_code"
               className="block text-sm font-semibold text-gray-600"
             >
               Code postal *
             </label>
             <input
               type="number"
-              name="codePostal"
-              id="codePostal"
-              value={formData.codePostal}
+              name="zip_code"
+              id="zip_code"
+              value={formData.zip_code}
               onChange={handleInputChange}
               className="mt-2 border p-2 w-full rounded-md"
               required
@@ -300,16 +344,16 @@ const Form = ({ id }) => {
           </div>
           <div className="mb-4 w-full md:w-2/5">
             <label
-              htmlFor="ville"
+              htmlFor="city"
               className="block text-sm font-semibold text-gray-600"
             >
               Ville *
             </label>
             <input
               type="text"
-              name="ville"
-              id="ville"
-              value={formData.ville}
+              name="city"
+              id="city"
+              value={formData.city}
               onChange={handleInputChange}
               className="mt-2 border p-2 w-full rounded-md"
               required
@@ -320,16 +364,16 @@ const Form = ({ id }) => {
         <div className="flex gap-4 w-full md:flex-row flex-col">
           <div className="mb-4 w-full md:w-1/2">
             <label
-              htmlFor="dureeArretTravail"
+              htmlFor="missing"
               className="block text-sm font-semibold text-gray-600"
             >
               Durée d’arrêt de travail cette année (en jour) *
             </label>
             <input
               type="number"
-              name="dureeArretTravail"
-              id="dureeArretTravail"
-              value={formData.dureeArretTravail}
+              name="missing"
+              id="missing"
+              value={formData.missing}
               onChange={handleInputChange}
               className="mt-2 border p-2 w-full rounded-md"
               required
@@ -337,15 +381,15 @@ const Form = ({ id }) => {
           </div>
           <div className="mb-4 w-full md:w-1/2">
             <label
-              htmlFor="statut"
+              htmlFor="status"
               className="block text-sm font-semibold text-gray-600"
             >
               Statut *
             </label>
             <select
-              name="statut"
-              id="statut"
-              value={formData.statut}
+              name="status"
+              id="status"
+              value={formData.status}
               onChange={handleInputChange}
               className="mt-2 border p-2 w-full rounded-md"
               required
@@ -360,7 +404,7 @@ const Form = ({ id }) => {
           </div>
         </div>
 
-        <div className="mb-4 w-full">
+        {/* <div className="mb-4 w-full">
           <label
             htmlFor="zoneDeDepot"
             className="block text-sm font-semibold text-gray-600"
@@ -376,7 +420,7 @@ const Form = ({ id }) => {
             fileInputRef={fileInputRef}
             handleSelectFiles={handleSelectFiles}
           />
-        </div>
+        </div> */}
       </div>
 
       <div className="bg-gray-200 py-3 px-5 flex justify-end rounded-b-sm">
