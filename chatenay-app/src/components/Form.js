@@ -196,7 +196,7 @@ const Form = ({ id }) => {
               htmlFor="age"
               className="block text-sm font-semibold text-gray-600"
             >
-              Ancienneté *
+              Ancienneté (en année) *
             </label>
             <input
               type="number"
@@ -323,7 +323,7 @@ const Form = ({ id }) => {
               htmlFor="dureeArretTravail"
               className="block text-sm font-semibold text-gray-600"
             >
-              Durée d’arrêt de travail cette année (en jours) *
+              Durée d’arrêt de travail cette année (en jour) *
             </label>
             <input
               type="number"
