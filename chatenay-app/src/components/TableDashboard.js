@@ -21,6 +21,8 @@ import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
+import { Link } from "react-router-dom";
+
 
 function createData(id, name, metier, status, usure, modification) {
   return {
@@ -34,9 +36,6 @@ function createData(id, name, metier, status, usure, modification) {
 }
 
 const rows = [
-  createData(1, 'Jane Cooper', 'eboueur', 'active', 56,'01/01/2021'),
-  createData(1, 'Jane Cooper', 'eboueur', 'active', 56,'01/01/2021'),
-  createData(1, 'Jane Cooper', 'eboueur', 'active', 56,'01/01/2021'),
   createData(1, 'Jane Cooper', 'eboueur', 'active', 56,'01/01/2021'),
   createData(1, 'Jane Cooper', 'eboueur', 'active', 56,'01/01/2021'),
   createData(1, 'Jane Cooper', 'eboueur', 'active', 56,'01/01/2021'),
@@ -179,8 +178,6 @@ function TableDashboard(props) {
         }),
       }}
     >
-  
-
       {numSelected > 0 ? (
         <Tooltip title="Delete">
           <IconButton>
@@ -327,6 +324,8 @@ export default function EnhancedTable() {
                     <TableCell align="right">{row.status}</TableCell>
                     <TableCell align="right">{row.usure}</TableCell>
                     <TableCell align="right">{row.modification}</TableCell>
+                    <TableCell>
+                        <Link to="/profile">voir</Link></TableCell>
                   </TableRow>
                 );
               })}
