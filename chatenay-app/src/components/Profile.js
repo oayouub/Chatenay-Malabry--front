@@ -1,14 +1,61 @@
-import React from "react";
+import React, { useState, useEffect,} from "react"
 import {
   PencilIcon,
   ArrowLeftIcon,
   PaperClipIcon,
-} from "@heroicons/react/outline";
+} from "@heroicons/react/outline"
 
-import Avatar from "../assets/avatar.jpg";
-import { Link } from "react-router-dom";
+import Avatar from "../assets/avatar.jpg"
+import { Link } from "react-router-dom"
 
 const UserProfile = () => {
+
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [userData, setUserData] = useState([
+    { label: "Taux d'usure", value: "80%", field: "wearRate", isProgressBar: true },
+    { label: "Mail", value: "jane.cooper@example.com", field: "email" },
+    { label: "Âge", value: "32 ans", field: "age" },
+    {
+      label: "À propos",
+      value: "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
+      field: "about",
+      isMultiLine: true
+    },
+    { label: "Adresse", value: "72 rue Jean Charles, 75000 Paris", field: "address" },
+    { label: "Arrêt de travail cette année (jour)", value: "150 jours", field: "daysOff" },
+    { label: "Statut", value: "Reconversion", field: "status" },
+    { label: "Fichiers complémentaires", value: ["CV.pdf", "NOM_FICHIER.pdf"], field: "files" },
+  ]);
+
+  useEffect(() => {
+    const savedUserData = localStorage.getItem('userData')
+    if (savedUserData) {
+      setUserData(JSON.parse(savedUserData))
+    }
+  }, [])
+
+  const toggleEditMode = () => {
+    setIsEditMode(!isEditMode)
+  }
+
+  const handleInputChange = (index, newValue) => {
+    const newData = [...userData]
+    if (userData[index].field === 'wearRate') {
+      const wearRate = Math.min(Math.max(newValue, 0), 100)
+      newData[index].value = `${wearRate}%`
+    } else if (index === 7) {
+      newData[index].value = newValue.split("\n")
+    } else {
+      newData[index].value = newValue
+    }
+    setUserData(newData)
+  };
+
+  const handleSave = () => {
+    localStorage.setItem('userData', JSON.stringify(userData))
+    setIsEditMode(false)
+  }
+
   return (
     <div className="min-h-screen">
       <div className="bg-white w-full">
@@ -29,95 +76,104 @@ const UserProfile = () => {
               </div>
             </div>
           </div>
-          <PencilIcon className="h-8 w-8 text-gray-700 cursor-pointer" />
+          <div className="flex items-center">
+            {isEditMode && (
+              <button
+                onClick={handleSave}
+                className="px-2 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 mr-2"
+              >
+                Save
+              </button>
+            )}
+            <PencilIcon className="h-8 w-8 text-gray-700 cursor-pointer" onClick={toggleEditMode} />
+          </div>
         </div>
 
-        <div className="overflow-x-auto px-8">
+        <div className="overflow-x-auto">
           <table className="w-full text-sm text-left text-gray-500 table-auto">
             <tbody>
-              {createRow(0, "Taux d'usure", "80%", true)}
-              {createRow(1, "Mail", "jane.cooper@example.com")}
-              {createRow(2, "Âge", "32 ans")}
-              {createRow(
-                3,
-                "À propos",
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla efficitur ultricies aliquam. Aenean dictum suscipit diam a sagittis. Duis efficitur eros aliquet urna semper feugiat. Aenean iaculis, enim ut suscipit ullamcorper, ex enim suscipit ligula, et dignissim lorem nibh eget erat. Phasellus suscipit tellus sed lorem posuere dignissim. Donec interdum vel leo sed tristique. Quisque nec neque nisi. Integer mollis finibus ligula non laoreet. Vivamus luctus, magna non faucibus pellentesque, mauris nunc congue metus, eget tincidunt lacus augue non mauris. Nunc lobortis, turpis et consectetur trist.",
-                false,
-                true
-              )}
-              {createRow(4, "Adresse", "72 rue Jean Charles, 75000 Paris")}
-              {createRow(5, "Arrêt de travail cette année (jour)", "150 jours")}
-              {createRow(6, "Statut", "Reconversion")}
-              {createRow(7, "Fichiers complémentaires", null, false, false, [
-                "CV.pdf",
-                "NOM_FICHIER.pdf",
-              ])}
+              {userData.map((data, index) => (
+                <tr key={index}>
+                  <th
+                    scope="row"
+                    className={`py-4 px-6 font-medium text-gray-900 ${
+                      index % 2 === 0 ? "bg-gray-50" : "bg-white"
+                    }`}
+                    style={{ width: "30%" }}
+                  >
+                    {data.label}
+                  </th>
+                  
+                  <td
+                    className={`py-4 px-6 ${
+                      index % 2 === 0 ? "bg-gray-50" : "bg-white"
+                    } ${data.isMultiLine ? "whitespace-normal break-words" : "whitespace-nowrap"}`}
+                  >
+                    {isEditMode ? (
+                      data.isProgressBar ? (
+                        <input
+                          type="range"
+                          min="0"
+                          max="100"
+                          value={parseInt(data.value)}
+                          onChange={(e) => handleInputChange(index, e.target.value)}
+                          className="form-range w-full h-2.5 bg-gray-200 rounded-lg cursor-pointer"
+                        />
+                      ) : data.field === "files" ? (
+                        <textarea
+                          className="form-input w-full h-full p-2 border-gray-300 rounded-md"
+                          value={data.value.join("\n")}
+                          onChange={(e) => handleInputChange(index, e.target.value)}
+                        />
+                      ) : (
+                        <input
+                          type="text"
+                          value={data.value}
+                          onChange={(e) => handleInputChange(index, e.target.value)}
+                          className="form-input w-full h-full p-2 border-gray-300 rounded-md"
+                        />
+                      )
+                    ) : data.isProgressBar ? (
+                      <div className="flex items-center justify-start">
+                        <span className="text-lg font-semibold text-gray-600 mr-2">
+                          {data.value}
+                        </span>
+                        <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-300">
+                          <div
+                            className="bg-red-600 h-2.5 rounded-full"
+                            style={{ width: data.value }}
+                          ></div>
+                        </div>
+                      </div>
+                    ) : data.field === "files" ? (
+                      <div className="border-2 rounded-md border-gray-100 flex flex-col w-1/2 divide-y divide-gray-100">
+                        {data.value.map((file, fileIndex) => (
+                          <div className="flex justify-between px-3 py-2" key={fileIndex}>
+                            <div className="flex gap-2">
+                              <PaperClipIcon className="w-4 h-4" />
+                              {file}
+                            </div>
+                            <a
+                              href={`/path-to-${file}`}
+                              className="text-blue-600 hover:text-blue-800"
+                            >
+                              Télécharger
+                            </a>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      data.value
+                    )}
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-// Helper function to create a table row
-const createRow = (
-  index,
-  label,
-  value,
-  isProgressBar = false,
-  isMultiLine = false,
-  files = []
-) => (
-  <tr>
-    <th
-      scope="row"
-      className={`py-4 px-6 font-medium text-gray-900 ${
-        index % 2 === 0 ? "bg-gray-50" : "bg-white"
-      } ${isProgressBar ? "text-xl" : ""} min-w-max`}
-      style={{ width: "30%" }}
-    >
-      {label}
-    </th>
-    <td
-      className={`py-4 px-6 ${index % 2 === 0 ? "bg-gray-50" : "bg-white"} ${
-        isMultiLine ? "whitespace-normal break-words" : "whitespace-nowrap"
-      }`}
-    >
-      {isProgressBar ? (
-        <div className="flex items-center justify-start">
-          <span className="text-lg font-semibold text-gray-600 mr-2">
-            {value}
-          </span>
-          <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-300">
-            <div
-              className="bg-red-600 h-2.5 rounded-full"
-              style={{ width: value }}
-            ></div>
-          </div>
-        </div>
-      ) : files.length >= 1 ? (
-        <div className="border-2 rounded-md border-gray-100 flex flex-col w-1/2 divide-y > * + * divide-gray-100 > * + *">
-          {files.map((file, index) => (
-            <div className="flex justify-between px-3 py-2" key={index}>
-              <div className="flex gap-2">
-                <PaperClipIcon className="w-4 h-4" />
-                {file}
-              </div>
-              <a
-                href={`/path-to-${file}`}
-                className="text-blue-600 hover:text-blue-800"
-              >
-                Télécharger
-              </a>
-            </div>
-          ))}
-        </div>
-      ) : (
-        value
-      )}
-    </td>
-  </tr>
-);
-
-export default UserProfile;
+export default UserProfile
