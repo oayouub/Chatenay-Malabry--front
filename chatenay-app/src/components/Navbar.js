@@ -6,7 +6,7 @@ import Logo from "../assets/logo.png";
 
 const Navbar = () => {
   return (
-    <div className="bg-primary h-[64px] flex h-16 flex-col justify-center items-end flex-shrink-0">
+    <div className="bg-primary h-[64px] flex flex-col justify-center items-end flex-shrink-0">
       <div className="flex justify-between items-center self-stretch  m-8">
         <div className="flex gap-6 w-80 p-4 color text-white items-center">
           <Link to="/">
