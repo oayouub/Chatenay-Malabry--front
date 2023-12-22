@@ -6,7 +6,7 @@ const Dashboard = () => {
 
     return (
       <div className="h-screen">
-        <div class="flex w-1280 p-10 31 gap-10 shadow-md">
+        <div class="flex w-1280 p-7 gap-10 shadow-md">
           <h1 class="text-gray-900 font-inter font-bold text-3xl leading-9 ">
             Dashboard
           </h1>
