@@ -6,14 +6,15 @@ import {
 } from "@heroicons/react/outline";
 
 import Avatar from "../assets/avatar.jpg";
+import { Link } from "react-router-dom";
 
 const UserProfile = () => {
   return (
     <div className="min-h-screen">
-      <div className="bg-white p-8 w-full">
-        <div className="flex items-center justify-between space-x-4 mb-6">
+      <div className="bg-white w-full">
+        <div className="flex items-center px-4 py-3 justify-between space-x-4 mb-8 shadow">
           <div className="flex items-center gap-4">
-            <ArrowLeftIcon className="h-8 w-8 text-gray-700 cursor-pointer" />
+            <Link to="/"><ArrowLeftIcon className="h-8 w-8 text-gray-700 cursor-pointer" /></Link>
             <img
               className="h-16 w-16 rounded-full object-cover object-center"
               src={Avatar}
@@ -31,7 +32,7 @@ const UserProfile = () => {
           <PencilIcon className="h-8 w-8 text-gray-700 cursor-pointer" />
         </div>
 
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto px-8">
           <table className="w-full text-sm text-left text-gray-500 table-auto">
             <tbody>
               {createRow(0, "Taux d'usure", "80%", true)}
