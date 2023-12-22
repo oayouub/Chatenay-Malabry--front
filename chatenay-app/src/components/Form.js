@@ -6,19 +6,19 @@ import BaseAvatar from "../assets/baseAvatar.png";
 
 const Form = ({ id }) => {
   const [formData, setFormData] = useState({
-    photo: null,
+    photo: "",
     nom: "",
     prenom: "",
     email: "",
-    age: null,
+    age: "",
     metier: "",
-    anciennete: null,
+    anciennete: "",
     aPropos: "",
     adresse: "",
     ville: "",
     region: "",
-    codePostal: null,
-    dureeArretTravail: null,
+    codePostal: "",
+    dureeArretTravail: "",
     statut: "",
     zoneDeDepot: [],
   });
