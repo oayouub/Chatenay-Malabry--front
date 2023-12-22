@@ -6,8 +6,8 @@ const Dashboard = () => {
 
     return (
       <div className="h-screen">
-        <div class="flex w-1280 p-7 gap-10 shadow-md">
-          <h1 class="text-gray-900 font-inter font-bold text-3xl leading-9 ">
+        <div className="flex w-1280 p-7 gap-10 shadow-md">
+          <h1 className="text-gray-900 font-inter font-bold text-3xl leading-9 ">
             Dashboard
           </h1>
         </div>
@@ -28,7 +28,7 @@ const Dashboard = () => {
           </div>
         </div>
         <div>
-          <div class='flex justify-center'>
+          <div className='flex justify-center'>
             <TableDashboard
             sx={{border:'solid 5px blue'}} />
           </div>
