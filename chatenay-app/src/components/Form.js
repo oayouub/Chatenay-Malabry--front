@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 
 const Form = () => {
   const [formData, setFormData] = useState({
@@ -16,6 +16,8 @@ const Form = () => {
     statut: "",
     zoneDeDepot: [],
   });
+
+  const fileInputRef = useRef(null);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -45,6 +47,10 @@ const Form = () => {
 
   const handleDragOver = (e) => {
     e.preventDefault();
+  };
+
+  const handleClickFiles = () => {
+    fileInputRef.current.click();
   };
 
   const handleSelectFiles = (e) => {
@@ -198,81 +204,83 @@ const Form = () => {
         </label>
         <input
           type="text"
-          name="ville"
-          id="ville"
-          value={formData.ville}
-          onChange={handleInputChange}
-          className="mt-2 border p-2 w-full"
-          required
-        />
-      </div>
-      <div className="mb-4">
-        <label
-          htmlFor="region"
-          className="block text-sm font-semibold text-gray-600"
-        >
-          Région:
-        </label>
-        <select
-          name="region"
-          id="region"
-          value={formData.region}
-          onChange={handleInputChange}
-          className="mt-2 border p-2 w-full"
-          required
-        >
-          <option value="idf">Île-de-France</option>
-        </select>
-      </div>
-      <div className="mb-4">
-        <label
-          htmlFor="codePostal"
-          className="block text-sm font-semibold text-gray-600"
-        >
-          Code postal:
-        </label>
-        <input
-          type="number"
-          name="codePostal"
-          id="codePostal"
-          value={formData.codePostal}
-          onChange={handleInputChange}
-          className="mt-2 border p-2 w-full"
-          required
-        />
-      </div>
-      <div className="mb-4">
-        <label
-          htmlFor="dureeArretTravail"
-          className="block text-sm font-semibold text-gray-600"
-        >
-          Durée d’arrêt de travail cette année (en jours):
-        </label>
-        <input
-          type="number"
-          name="dureeArretTravail"
-          id="dureeArretTravail"
-          value={formData.dureeArretTravail}
-          onChange={handleInputChange}
-          className="mt-2 border p-2 w-full"
-          required
-        />
-      </div>
-      <div className="mb-4">
-        <label
-          htmlFor="statut"
-          className="block text-sm font-semibold text-gray-600"
-        >
-          Statut:
-        </label>
-        <select
-          name="statut"
-          id="statut"
-          value={formData.statut}
-          onChange={handleInputChange}
-          className="mt-2 border p-2 w-full"
-          required
-        >
+              name="ville"
+              id="ville"
+              value={formData.ville}
+              onChange={handleInputChange}
+              className="mt-2 border p-2 w-full"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="region"
+              className="block text-sm font-semibold text-gray-600"
+            >
+              Région:
+            </label>
+            <select
+              name="region"
+              id="region"
+              value={formData.region}
+              onChange={handleInputChange}
+              className="mt-2 border p-2 w-full"
+              required
+            >
+              <option value="">Select a region</option> // Add default option
+              <option value="idf">Île-de-France</option>
+            </select>
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="codePostal"
+              className="block text-sm font-semibold text-gray-600"
+            >
+              Code postal:
+            </label>
+            <input
+              type="number"
+              name="codePostal"
+              id="codePostal"
+              value={formData.codePostal}
+              onChange={handleInputChange}
+              className="mt-2 border p-2 w-full"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="dureeArretTravail"
+              className="block text-sm font-semibold text-gray-600"
+            >
+              Durée d’arrêt de travail cette année (en jours):
+            </label>
+            <input
+              type="number"
+              name="dureeArretTravail"
+              id="dureeArretTravail"
+              value={formData.dureeArretTravail}
+              onChange={handleInputChange}
+              className="mt-2 border p-2 w-full"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="statut"
+              className="block text-sm font-semibold text-gray-600"
+            >
+              Statut:
+            </label>
+            <select
+              name="statut"
+              id="statut"
+              value={formData.statut}
+              onChange={handleInputChange}
+              className="mt-2 border p-2 w-full"
+              required
+            >
+          
           <option value="reconversion">Reconversion</option>
         </select>
       </div>
@@ -293,7 +301,11 @@ const Form = () => {
               {formData.zoneDeDepot.map((file, index) => (
                 <li key={index} className="text-gray-700">
                   {file.name}{" "}
-                  <button className="text-red-500 underline" type="button" onClick={() => handleRemoveFile(index)}>
+                  <button
+                    className="text-red-500 underline"
+                    type="button"
+                    onClick={() => handleRemoveFile(index)}
+                  >
                     Supprimer
                   </button>
                 </li>
@@ -301,8 +313,14 @@ const Form = () => {
             </ul>
           ) : (
             <p className="text-gray-500">
-              Glissez et déposez des fichiers ici ou utilisez le bouton
-              ci-dessous.
+              Glissez et déposez des fichiers ici ou{" "}
+              <span
+                className="file-select-text text-blue-500 cursor-pointer"
+                onClick={handleClickFiles}
+              >
+                cliquez
+              </span>{" "}
+              pour sélectionner des fichiers .
             </p>
           )}
         </div>
@@ -311,7 +329,8 @@ const Form = () => {
           name="zoneDeDepot"
           onChange={handleSelectFiles}
           multiple
-          className="mt-2 border p-2 w-full"
+          className="hidden"
+          ref={fileInputRef}
         />
       </div>
       <button
