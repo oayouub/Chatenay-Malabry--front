@@ -8,12 +8,13 @@ import TableRow from '@mui/material/TableRow';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import supabase from "../server/supabase";
-
+import { Link } from 'react-router-dom';
 
 
 
 export default function BasicTable() {
   const [posts, setPosts] = useState([])
+  const [getId, setGetId] = useState(null)
 
   useEffect(() => {
     async function getPosts() {
@@ -28,7 +29,7 @@ export default function BasicTable() {
     getPosts();
     console.log('posts2', posts)
   }, []);
-
+console.log('id',getId)
   return (
     <TableContainer component={Paper} sx={{width: '1200px'}}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -52,8 +53,9 @@ export default function BasicTable() {
               </TableCell>
               <TableCell align="right">{row.job}</TableCell>
               <TableCell align="right">{row.status}</TableCell>
-              <TableCell align="right">{row.usure ? row.usure : "0"}%</TableCell>
-              <TableCell align="right">{new Date(row.created_at).toLocaleString()}</TableCell>
+              <TableCell align="right">{row.usure}</TableCell>
+              <TableCell align="right">{row.created_at}</TableCell>
+              <TableCell ><Link to={`/profile/${row.id}`}>Voir</Link></TableCell>
             </TableRow>
           ))}
         </TableBody>
