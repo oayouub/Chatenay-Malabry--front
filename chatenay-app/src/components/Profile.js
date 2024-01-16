@@ -5,12 +5,12 @@ import {
   PaperClipIcon,
 } from "@heroicons/react/outline"
 import Avatar from "../assets/avatar.jpg"
-import { Link } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import supabase from "../server/supabase"
 
 
 const UserProfile = () => {
-
+const { userId } = useParams()
   const [isEditMode, setIsEditMode] = useState(false);
   const [profil, setProfil] = useState(null);
   const [userData, setUserData] = useState([
@@ -29,22 +29,62 @@ const UserProfile = () => {
     { label: "Fichiers complémentaires", value: ["CV.pdf", "NOM_FICHIER.pdf"], field: "files" },
   ]);
 
+  const [userData2, setUserData2] = useState(null);
+
   useEffect(() => {
-    async function getProfil() {
-          const { data, error } = await supabase
-              .from('users')
-              .select(`id, firstname, lastname, email, job, status, missing, created_at`)
-              .eq('id', 1)
-              .single();
-          if (error) {
-              console.log('error', error);
-          } else {
-              setProfil(data);
-          }
-  }
-  getProfil();
-  console.log('profil', profil);
-  },[])
+    // Fonction pour récupérer les détails de l'utilisateur depuis Supabase
+    const fetchUserData = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('users') // Remplacez 'utilisateurs' par le nom de votre table dans Supabase
+          .select('*')
+          .eq('id', userId)
+          .single();
+
+        if (error) {
+          throw error;
+        }
+
+        setUserData2(data);
+      } catch (error) {
+        console.error('Erreur lors de la récupération des données utilisateur', error);
+        // Gérer les erreurs, par exemple, rediriger l'utilisateur vers une page d'erreur
+      }
+    };
+
+    // Appel de la fonction pour récupérer les données une fois que le composant est monté
+    fetchUserData();
+  }, [userId]);
+//  (((userData2.age x 2) + ((userData2.difficult x 100 x 3) + ( userData2.missing x 4) + ( userData2.seniority x 1))) / 100) * 5
+  useEffect(() => {
+    // Mettre à jour l'état userData lorsque userDataFromSupabase change
+    
+    if (userData2) {
+      const age = userData2.age || 0;
+      const difficult = userData2.difficult || 0;
+      const missing = userData2.missing || 0;
+      const seniority = userData2.seniority || 0;
+
+      const wearRateValue = (((age * 2) + ((difficult * 100 * 3) + (missing * 4) + (seniority * 1))) / 100) * 5;
+
+      setUserData([
+        { label: "Taux d'usure", value: `${wearRateValue}%`, field: "wearRate", isProgressBar: true },
+
+        { label: "Mail", value: userData2.email, field: "email" },
+        { label: "Âge", value:  userData2.age, field: "age" },
+        {
+          label: "À propos",
+          value:  userData2.about,
+          field: "about",
+          isMultiLine: true
+        },
+        { label: "Adresse", value:  userData2.address, field: "address" },
+        { label: "Arrêt de travail cette année (jour)", value:  userData2.missing, field: "daysOff" },
+        { label: "Statut", value:  userData2.status, field: "status" },
+        { label: "Fichiers complémentaires", value: ["CV.pdf", "NOM_FICHIER.pdf"], field: "files" },
+      ]);
+    }
+  }, [userData2]);
 
   useEffect(() => {
     const savedUserData = localStorage.getItem('userData')
@@ -73,11 +113,14 @@ const UserProfile = () => {
 
 
   return (
+    
     <div className="min-h-screen">
       <div className="bg-white w-full">
         <div className="flex items-center px-4 py-3 justify-between space-x-4 mb-8 shadow">
           <div className="flex items-center gap-4">
-            <Link to="/"><ArrowLeftIcon className="h-8 w-8 text-gray-700 cursor-pointer" /></Link>
+            <Link to="/">
+              <ArrowLeftIcon className="h-8 w-8 text-gray-700 cursor-pointer" />
+            </Link>
             <img
               className="h-16 w-16 rounded-full object-cover object-center"
               src={Avatar}
@@ -86,7 +129,11 @@ const UserProfile = () => {
             <div className="flex-grow">
               <div className="flex flex-col items-start">
                 <span className="font-semibold text-lg text-gray-800">
-                  Jane Cooper
+                  {userData2 ? (
+                      <p>{userData2.firstname} {userData2.lastname}</p>
+                  ) : (
+                    <p>Chargement des données...</p>
+                  )}
                 </span>
                 <span className="text-sm text-gray-500">Ouvrière</span>
               </div>
@@ -101,7 +148,10 @@ const UserProfile = () => {
                 Save
               </button>
             )}
-            <PencilIcon className="h-8 w-8 text-gray-700 cursor-pointer" onClick={toggleEditMode} />
+            <PencilIcon
+              className="h-8 w-8 text-gray-700 cursor-pointer"
+              onClick={toggleEditMode}
+            />
           </div>
         </div>
 
@@ -111,27 +161,39 @@ const UserProfile = () => {
               {userData.map((data, index) => (
                 <tr key={index}>
                   <th
-                    scope="row" 
-                    className={`py-4 px-6 font-medium text-gray-900 ${index % 2 === 0 ? "bg-gray-50" : "bg-white"}`}
+                    scope="row"
+                    className={`py-4 px-6 font-medium text-gray-900 ${
+                      index % 2 === 0 ? "bg-gray-50" : "bg-white"
+                    }`}
                     style={{ width: "30%" }}
                   >
                     {data.label}
                   </th>
                   <td
-                    className={`py-4 px-6 ${index % 2 === 0 ? "bg-gray-50" : "bg-white"} ${data.isMultiLine ? "whitespace-normal break-words" : "whitespace-nowrap"}`}
+                    className={`py-4 px-6 ${
+                      index % 2 === 0 ? "bg-gray-50" : "bg-white"
+                    } ${
+                      data.isMultiLine
+                        ? "whitespace-normal break-words"
+                        : "whitespace-nowrap"
+                    }`}
                   >
                     {isEditMode && data.field !== "wearRate" ? (
                       data.field === "files" ? (
                         <textarea
                           className={textareaStyle}
                           value={data.value.join("\n")}
-                          onChange={(e) => handleInputChange(index, e.target.value)}
+                          onChange={(e) =>
+                            handleInputChange(index, e.target.value)
+                          }
                         />
                       ) : (
                         <input
                           type="text"
                           value={data.value}
-                          onChange={(e) => handleInputChange(index, e.target.value)}
+                          onChange={(e) =>
+                            handleInputChange(index, e.target.value)
+                          }
                           className={inputStyle}
                         />
                       )
@@ -151,7 +213,10 @@ const UserProfile = () => {
                       // File display logic
                       <div className="border-2 rounded-md border-gray-100 flex flex-col w-1/2 divide-y divide-gray-100">
                         {data.value.map((file, fileIndex) => (
-                          <div className="flex justify-between px-3 py-2" key={fileIndex}>
+                          <div
+                            className="flex justify-between px-3 py-2"
+                            key={fileIndex}
+                          >
                             <div className="flex gap-2">
                               <PaperClipIcon className="w-4 h-4" />
                               {file}
@@ -176,7 +241,7 @@ const UserProfile = () => {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export default UserProfile

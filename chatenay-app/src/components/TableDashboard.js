@@ -49,13 +49,13 @@ console.log('id',getId)
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell component="th" scope="row">
-                {row.firstname}{row.lastname}
+                {row.firstname} {row.lastname}
               </TableCell>
               <TableCell align="right">{row.job}</TableCell>
               <TableCell align="right">{row.status}</TableCell>
-              <TableCell align="right">{row.missing}</TableCell>
+              <TableCell align="right">{row.usure}</TableCell>
               <TableCell align="right">{row.created_at}</TableCell>
-              <TableCell onClick={() => setGetId('1')}><Link to="/profile">Voir</Link></TableCell>
+              <TableCell ><Link to={`/profile/${row.id}`}>Voir</Link></TableCell>
             </TableRow>
           ))}
         </TableBody>
