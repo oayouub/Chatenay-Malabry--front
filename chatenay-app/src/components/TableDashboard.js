@@ -51,6 +51,21 @@ export default function BasicTable() {
     console.log('posts2', posts)
   }, []);
 console.log('id',getId)
+
+const getUsureColor = (usure) => {
+  if (usure >= 0 && usure <= 30) {
+    return '#6AC76A';
+  } else if (usure >= 31 && usure <= 45) {
+    return '#FFFA6B';
+  } else if (usure >= 46 && usure <= 60) {
+    return 'orange';
+  } else if (usure >= 61 && usure <= 100) {
+    return '#CD4D4D';
+  } else {
+    return 'inherit'; // Default color if usure is not in any specified range
+  }
+};
+
   return (
     <TableContainer component={Paper} sx={{width: '1200px'}}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -59,7 +74,7 @@ console.log('id',getId)
             <StyledTableCell>NAME</StyledTableCell>
             <StyledTableCell align="right">METIER</StyledTableCell>
             <StyledTableCell align="right">STATUS</StyledTableCell>
-            <StyledTableCell align="right">USURE</StyledTableCell>
+            <StyledTableCell align="right" >USURE</StyledTableCell>
             <StyledTableCell align="right">MODIFICATION</StyledTableCell>
             <StyledTableCell align="right">Voir</StyledTableCell>
           </TableRow>
@@ -75,7 +90,7 @@ console.log('id',getId)
               </StyledTableCell>
               <StyledTableCell align="right">{row.job}</StyledTableCell>
               <StyledTableCell align="right">{row.status}</StyledTableCell>
-              <StyledTableCell align="right">{row.usure + " %"}</StyledTableCell>
+              <StyledTableCell align="right"><p style={{borderRadius:'100px',padding:'3px' ,backgroundColor: getUsureColor(row.usure) }}>{row.usure + " %"}</p></StyledTableCell>
               <StyledTableCell align="right">{(new Date(row.created_at)).getDate() + "/" + (new Date(row.created_at)).getMonth() + 1 + "/" + (new Date(row.created_at)).getFullYear()}</StyledTableCell>
               <StyledTableCell align="right"><Link to={`/profile/${row.id}`}>Voir</Link></StyledTableCell>
             </TableRow>
