@@ -7,6 +7,9 @@ import {
 import Avatar from "../assets/avatar.jpg"
 import { Link, useParams } from "react-router-dom"
 import supabase from "../server/supabase"
+import LinearProgress from '@mui/material/LinearProgress';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
 
 
 const UserProfile = () => {
@@ -98,6 +101,21 @@ const { userId } = useParams()
   const handleSave = () => {
     localStorage.setItem('userData', JSON.stringify(userData))
     setIsEditMode(false)
+  }
+
+  function LinearProgressWithLabel(props) {
+    return (
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Box sx={{ minWidth: 35 }}>
+          <Typography variant="body1" color="error">{`${Math.round(
+            props.value,
+          )}%`}</Typography>
+        </Box>
+        <Box sx={{ width: '100%', mr: 1 }}>
+          <LinearProgress variant="determinate" color="error" {...props} />
+        </Box>
+      </Box>
+    );
   }
 
   const inputStyle = "form-input w-full h-full p-2 border-gray-300 rounded-md bg-transparent";
@@ -193,17 +211,11 @@ const { userId } = useParams()
                         />
                       )
                     ) : data.isProgressBar ? (
-                      <div className="flex items-center justify-start">
-                        <span className="text-lg font-semibold text-gray-600 mr-2">
-                          {data.value}
-                        </span>
-                        <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-300">
-                          <div
-                            className="bg-red-600 h-2.5 rounded-full"
-                            style={{ width: data.value }}
-                          ></div>
-                        </div>
-                      </div>
+                      // <div className="flex items-center justify-start">
+                      //   <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-300">
+                          <LinearProgressWithLabel value={data.value} />
+                        /* </div>
+                      </div> */
                     ) : data.field === "files" ? (
                       // File display logic
                       <div className="border-2 rounded-md border-gray-100 flex flex-col w-1/2 divide-y divide-gray-100">
