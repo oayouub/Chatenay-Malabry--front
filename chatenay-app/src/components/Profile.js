@@ -12,7 +12,6 @@ import supabase from "../server/supabase"
 const UserProfile = () => {
 const { userId } = useParams()
   const [isEditMode, setIsEditMode] = useState(false);
-  const [profil, setProfil] = useState(null);
   const [userData, setUserData] = useState([
     { label: "Taux d'usure", value: "80%", field: "wearRate", isProgressBar: true },
     { label: "Mail", value: "jane.cooper@example.com", field: "email" },
@@ -60,15 +59,8 @@ const { userId } = useParams()
     // Mettre à jour l'état userData lorsque userDataFromSupabase change
     
     if (userData2) {
-      const age = userData2.age || 0;
-      const difficult = userData2.difficult || 0;
-      const missing = userData2.missing || 0;
-      const seniority = userData2.seniority || 0;
-
-      const wearRateValue = (((age * 2) + ((difficult * 100 * 3) + (missing * 4) + (seniority * 1))) / 100) * 5;
-
       setUserData([
-        { label: "Taux d'usure", value: `${wearRateValue}%`, field: "wearRate", isProgressBar: true },
+        { label: "Taux d'usure", value: userData2.usure, field: "wearRate", isProgressBar: true },
 
         { label: "Mail", value: userData2.email, field: "email" },
         { label: "Âge", value:  userData2.age, field: "age" },
@@ -113,7 +105,6 @@ const { userId } = useParams()
 
 
   return (
-    
     <div className="min-h-screen">
       <div className="bg-white w-full">
         <div className="flex items-center px-4 py-3 justify-between space-x-4 mb-8 shadow">
@@ -135,7 +126,11 @@ const { userId } = useParams()
                     <p>Chargement des données...</p>
                   )}
                 </span>
-                <span className="text-sm text-gray-500">Ouvrière</span>
+                {userData2 ? (
+                <span className="text-sm text-gray-500">{userData2.job}</span>
+                ) : (
+                  <p>Chargement des données...</p>
+                )}
               </div>
             </div>
           </div>
