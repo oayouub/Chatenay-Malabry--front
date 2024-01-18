@@ -104,15 +104,26 @@ const { userId } = useParams()
   }
 
   function LinearProgressWithLabel(props) {
+    let color;
+    if (props.value <= 30) {
+      color = "success"; 
+    } else if (props.value <= 45) {
+      color = "warning"; 
+    } else if (props.value <= 60) {
+      color = "orange";
+    } else {
+      color = "error";
+    }
+  
     return (
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
         <Box sx={{ minWidth: 35 }}>
-          <Typography variant="body1" color="error">{`${Math.round(
+          <Typography variant="body1" color={color}>{`${Math.round(
             props.value,
           )}%`}</Typography>
         </Box>
         <Box sx={{ width: '100%', mr: 1 }}>
-          <LinearProgress variant="determinate" color="error" {...props} />
+          <LinearProgress variant="determinate" color={color} {...props} />
         </Box>
       </Box>
     );
