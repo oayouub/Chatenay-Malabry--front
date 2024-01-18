@@ -54,7 +54,7 @@ console.log('id',getId)
               <TableCell align="right">{row.job}</TableCell>
               <TableCell align="right">{row.status}</TableCell>
               <TableCell align="right">{row.usure}</TableCell>
-              <TableCell align="right">{row.created_at}</TableCell>
+              <TableCell align="right">{(new Date(row.created_at)).getDate() + "/" + (new Date(row.created_at)).getMonth() + 1 + "/" + (new Date(row.created_at)).getFullYear()}</TableCell>
               <TableCell ><Link to={`/profile/${row.id}`}>Voir</Link></TableCell>
             </TableRow>
           ))}
