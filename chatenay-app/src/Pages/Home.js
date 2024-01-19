@@ -1,4 +1,4 @@
-import Dashboard from "../components/Dashboard";
+import Dashboard from "../components/Dashboard"
 import Navbar from "../components/Navbar"
 
 const Home = () => {
@@ -9,4 +9,4 @@ const Home = () => {
             </div>
     )
 }
-export default Home;
+export default Home

@@ -7,14 +7,14 @@ import {
 import Avatar from "../assets/avatar.jpg"
 import { Link, useParams } from "react-router-dom"
 import supabase from "../server/supabase"
-import LinearProgress from '@mui/material/LinearProgress';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
+import LinearProgress from '@mui/material/LinearProgress'
+import Typography from '@mui/material/Typography'
+import Box from '@mui/material/Box'
 
 
 const UserProfile = () => {
 const { userId } = useParams()
-  const [isEditMode, setIsEditMode] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false)
   const [userData, setUserData] = useState([
     { label: "Taux d'usure", value: "80%", field: "wearRate", isProgressBar: true },
     { label: "Mail", value: "jane.cooper@example.com", field: "email" },
@@ -31,7 +31,7 @@ const { userId } = useParams()
     { label: "Fichiers complémentaires", value: ["CV.pdf", "NOM_FICHIER.pdf"], field: "files" },
   ]);
 
-  const [userData2, setUserData2] = useState(null);
+  const [userData2, setUserData2] = useState(null)
 
   useEffect(() => {
     // Fonction pour récupérer les détails de l'utilisateur depuis Supabase

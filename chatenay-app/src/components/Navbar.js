@@ -1,8 +1,7 @@
-import { UserAddIcon } from "@heroicons/react/outline";
-import React from "react";
-import { Link } from "react-router-dom";
-
-import Logo from "../assets/logo.png";
+import { UserAddIcon } from "@heroicons/react/outline"
+import React from "react"
+import { Link } from "react-router-dom"
+import Logo from "../assets/logo.png"
 
 const Navbar = () => {
   return (
@@ -24,7 +23,7 @@ const Navbar = () => {
         </Link>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Navbar;
+export default Navbar

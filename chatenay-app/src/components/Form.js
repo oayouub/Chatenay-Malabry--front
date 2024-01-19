@@ -1,10 +1,6 @@
-import React, { useState, useRef } from "react";
-import DragAndDrop from "./form/DragAndDrop";
-import AvatarInput from "./form/AvatarInput";
-import supabase from "../server/supabase";
-
-import BaseAvatar from "../assets/baseAvatar.png";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useRef } from "react"
+import supabase from "../server/supabase"
+import { useNavigate } from "react-router-dom"
 
 const jobs = {
   "Agent administratif municipal": 2,
@@ -36,7 +32,7 @@ const Form = ({ id }) => {
   });
 
   const navigate = useNavigate();
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [, setSelectedFile] = useState(null);
 
   const fileInputRef = useRef(null);
 

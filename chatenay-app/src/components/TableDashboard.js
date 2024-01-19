@@ -1,21 +1,25 @@
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import * as React from 'react';
-import { useEffect, useState } from 'react';
-import supabase from "../server/supabase";
-import { Link } from 'react-router-dom';
-import { styled } from '@mui/material/styles';
+import Paper from '@mui/material/Paper'
+import Table from '@mui/material/Table'
+import TableBody from '@mui/material/TableBody'
+import TableCell, { tableCellClasses } from '@mui/material/TableCell'
+import TableContainer from '@mui/material/TableContainer'
+import TableHead from '@mui/material/TableHead'
+import TableRow from '@mui/material/TableRow'
+import * as React from 'react'
+import { useEffect, useState } from 'react'
+import supabase from "../server/supabase"
+import { Link } from 'react-router-dom'
+import { styled } from '@mui/material/styles'
 
-
-
-export default function BasicTable() {
+export default function BasicTable({ searchTerm}) {
   const [posts, setPosts] = useState([])
-  const [getId, setGetId] = useState(null)
+
+  const filteredPosts = posts.filter(post =>
+    post.firstname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    post.lastname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    post.job.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    post.status.toLowerCase().includes(searchTerm.toLowerCase())
+  )
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -25,44 +29,32 @@ export default function BasicTable() {
     [`&.${tableCellClasses.body}`]: {
       fontSize: 14,
     },
-  }));
-
-  const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.action.hover,
-    },
-    // hide last border
-    '&:last-child td, &:last-child th': {
-      border: 0,
-    },
-  }));
+  }))
 
   useEffect(() => {
     async function getPosts() {
         const { data, error } = await supabase
             .from('users')
-            .select('*');
-        if (error) {console.error(error);
+            .select('*')
+        if (error) {console.error(error)
         } else {
-            setPosts(data);
+            setPosts(data)
         }
     }
-    getPosts();
-    console.log('posts2', posts)
-  }, []);
-console.log('id',getId)
+    getPosts()
+  }, [])
 
 const getUsureColor = (usure) => {
   if (usure >= 0 && usure <= 33) {
-    return '#91D091';
+    return '#91D091'
   } else if (usure >= 33 && usure <= 66) {
-    return '#FFBD80';
+    return '#FFBD80'
   } else if (usure >= 66   && usure <= 100) {
-    return '#DA7A7A';
+    return '#DA7A7A'
   } else {
-    return 'inherit'; // Default color if usure is not in any specified range
+    return 'inherit'
   }
-};
+}
 
   return (
     <TableContainer component={Paper} sx={{width: '1200px'}}>
@@ -78,7 +70,7 @@ const getUsureColor = (usure) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {posts.map((row) => (
+          {filteredPosts.map((row) => (
             <TableRow
               key={row.id}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -96,5 +88,5 @@ const getUsureColor = (usure) => {
         </TableBody>
       </Table>
     </TableContainer>
-  );
+  )
 }

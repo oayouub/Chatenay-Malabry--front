@@ -1,5 +1,5 @@
-import Navbar from "../components/Navbar";
-import Form from "../components/Form";
+import Navbar from "../components/Navbar"
+import Form from "../components/Form"
 
 const FormPage = () => {
   
@@ -17,6 +17,6 @@ const FormPage = () => {
       </div>
       <Form id={id} />
     </div>
-  );
-};
-export default FormPage;
+  )
+}
+export default FormPage
