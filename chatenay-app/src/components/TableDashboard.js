@@ -61,12 +61,12 @@ const getUsureColor = (usure) => {
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
-            <StyledTableCell>NAME</StyledTableCell>
+            <StyledTableCell>NOM</StyledTableCell>
             <StyledTableCell align="right">METIER</StyledTableCell>
             <StyledTableCell align="right">STATUS</StyledTableCell>
             <StyledTableCell align="right" >USURE %</StyledTableCell>
             <StyledTableCell align="right">MODIFICATION</StyledTableCell>
-            <StyledTableCell align="right">Voir</StyledTableCell>
+            <StyledTableCell align="right"></StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
