@@ -105,12 +105,10 @@ const { userId } = useParams()
 
   function LinearProgressWithLabel(props) {
     let color;
-    if (props.value <= 30) {
+    if (props.value <= 33) {
       color = "success"; 
-    } else if (props.value <= 45) {
-      color = "warning"; 
-    } else if (props.value <= 60) {
-      color = "orange";
+    } else if (props.value <= 66) {
+      color = "warning";
     } else {
       color = "error";
     }

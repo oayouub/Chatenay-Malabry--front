@@ -10,7 +10,8 @@ const jobs = {
   "Agent administratif municipal": 2,
   "Auxiliaire de vie en crèche": 3,
   "Agent de police municipale": 4,
-  Pompier: 1,
+  "Pompier": 1,
+  "developpeur":5,
 };
 
 const Form = ({ id }) => {
@@ -232,7 +233,9 @@ const Form = ({ id }) => {
               <option value="Agent de police municipale">
                 Agent de police municipale
               </option>
+              <option value="developpeur">Developpeur</option>
               <option value="Pompier">Pompier</option>
+
             </select>
           </div>
           <div className="mb-4">

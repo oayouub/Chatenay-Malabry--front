@@ -19,7 +19,7 @@ export default function BasicTable() {
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
-      backgroundColor: theme.palette.common.black,
+      backgroundColor: theme.palette.grey[700],
       color: theme.palette.common.white,
     },
     [`&.${tableCellClasses.body}`]: {
@@ -53,14 +53,12 @@ export default function BasicTable() {
 console.log('id',getId)
 
 const getUsureColor = (usure) => {
-  if (usure >= 0 && usure <= 30) {
-    return '#6AC76A';
-  } else if (usure >= 31 && usure <= 45) {
-    return '#FFFA6B';
-  } else if (usure >= 46 && usure <= 60) {
-    return 'orange';
-  } else if (usure >= 61 && usure <= 100) {
-    return '#CD4D4D';
+  if (usure >= 0 && usure <= 33) {
+    return '#91D091';
+  } else if (usure >= 33 && usure <= 66) {
+    return '#FFBD80';
+  } else if (usure >= 66   && usure <= 100) {
+    return '#DA7A7A';
   } else {
     return 'inherit'; // Default color if usure is not in any specified range
   }
@@ -74,7 +72,7 @@ const getUsureColor = (usure) => {
             <StyledTableCell>NAME</StyledTableCell>
             <StyledTableCell align="right">METIER</StyledTableCell>
             <StyledTableCell align="right">STATUS</StyledTableCell>
-            <StyledTableCell align="right" >USURE</StyledTableCell>
+            <StyledTableCell align="right" >USURE %</StyledTableCell>
             <StyledTableCell align="right">MODIFICATION</StyledTableCell>
             <StyledTableCell align="right">Voir</StyledTableCell>
           </TableRow>
@@ -90,7 +88,7 @@ const getUsureColor = (usure) => {
               </StyledTableCell>
               <StyledTableCell align="right">{row.job}</StyledTableCell>
               <StyledTableCell align="right">{row.status}</StyledTableCell>
-              <StyledTableCell align="right"><p style={{borderRadius:'100px',padding:'3px' ,backgroundColor: getUsureColor(row.usure) }}>{row.usure + " %"}</p></StyledTableCell>
+              <StyledTableCell align="right" sx={{ display:'flex', justifyContent:'end'}}><div style={{borderRadius:'100px',padding:'5px 10px' ,backgroundColor: getUsureColor(row.usure), width:'fitContent'}}>{row.usure + " %"}</div></StyledTableCell>
               <StyledTableCell align="right">{(new Date(row.created_at)).getDate() + "/" + (new Date(row.created_at)).getMonth() + 1 + "/" + (new Date(row.created_at)).getFullYear()}</StyledTableCell>
               <StyledTableCell align="right"><Link to={`/profile/${row.id}`}>Voir</Link></StyledTableCell>
             </TableRow>
